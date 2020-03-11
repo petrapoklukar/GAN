@@ -8,7 +8,7 @@ AT="@"
 # SBATCH_OR_CAT=cat
 SBATCH_OR_CAT=sbatch
 
-for config in "GAN_MINST"; do
+for config in "GAN_MNIST"; do
 echo $config
    
 "${SBATCH_OR_CAT}" << HERE
