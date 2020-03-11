@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Mar 11 13:49:34 2020
+Created on Wed Mar 11 20:44:46 2020
 
 @author: petrapoklukar
 """
 
+
 config = {
         'discriminator_config': {
-            'class_name': 'ConvolutionalDiscriminator',
-            'channel_dims': [1, 64, 128, 256, 1]
+            'class_name': 'ConvolutionalDiscriminator_D2',
+            'channel_dims': [1, 64, 128, 1]
             },
 
         'generator_config': {
@@ -25,7 +26,7 @@ config = {
                 },
                 
         'train_config': {
-                'batch_size': 128,
+                'batch_size': 64,
                 'epochs': 100,
                 'snapshot': 20, 
                 'console_print': 1,

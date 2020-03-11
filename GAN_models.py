@@ -84,6 +84,28 @@ class ConvolutionalDiscriminator(nn.Module):
 
     def forward(self, x):
         return self.conv(x).view(-1)
+    
+    
+class ConvolutionalDiscriminator_D2(nn.Module):
+    def __init__(self, config):
+        super(ConvolutionalDiscriminator_D2, self).__init__()
+        self.channel_dims = config['channel_dims'] 
+        self.conv = nn.Sequential(
+            nn.Conv2d(self.channel_dims[0], self.channel_dims[1], 4, 3, 1, bias=False),
+            TempPrintShape('Conv1'),
+            nn.LeakyReLU(0.2, inplace=True),
+            
+            nn.Conv2d(self.channel_dims[1], self.channel_dims[2], 4, 3, 1, bias=False),
+            TempPrintShape('Conv2'),
+            nn.BatchNorm2d(self.channel_dims[2]),
+            nn.LeakyReLU(0.2, inplace=True),
+
+            nn.Conv2d(self.channel_dims[2], self.channel_dims[3], 4, 3, 0, bias=False),
+            TempPrintShape('Conv3'),
+            nn.Sigmoid())
+
+    def forward(self, x):
+        return self.conv(x).view(-1)
 
 
     
@@ -93,7 +115,7 @@ class ConvolutionalDiscriminator(nn.Module):
 if __name__ == '__main__':
     d_config = {
             'class_name': 'ConvolutionalDiscriminator',
-            'channel_dims': [3, 64, 128, 256, 1]
+            'channel_dims': [3, 16, 32, 64, 1]
             }
 
     g_config = {
@@ -113,3 +135,9 @@ if __name__ == '__main__':
     print('Generated x: ', gen_x.shape)
     print('Is valid?: ', is_valid.shape)
     
+    d1_config = {
+            'class_name': 'ConvolutionalDiscriminator_D2',
+            'channel_dims': [3, 16, 32, 1]
+            }
+    d = ConvolutionalDiscriminator_D2(d1_config)
+    print(d(gen_x))

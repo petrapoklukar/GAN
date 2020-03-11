@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Mar 11 13:49:34 2020
+Created on Wed Mar 11 20:44:07 2020
 
 @author: petrapoklukar
 """
 
 config = {
         'discriminator_config': {
-            'class_name': 'ConvolutionalDiscriminator',
-            'channel_dims': [1, 64, 128, 256, 1]
+            'class_name': 'ConvolutionalDiscriminator_D2',
+            'channel_dims': [1, 64, 128, 1]
             },
 
         'generator_config': {
@@ -20,7 +20,7 @@ config = {
         
         'data_config': {
                 'input_size': None,
-                'usual_noise_dim': 100,
+                'usual_noise_dim': 50,
                 'path_to_data': '../datasets/MNIST'
                 },
                 

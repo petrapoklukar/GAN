@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 SOURCE_PATH="${HOME}/Workspace/GAN"
-RUNS_PATH="${SOURCE_PATH}/models/"
+RUNS_PATH="${SOURCE_PATH}/models"
 AT="@"
 
 # Test the job before actually submitting 
 #SBATCH_OR_CAT=cat
 SBATCH_OR_CAT=sbatch
 
-for config in "GAN_MNIST"; do
+for config in "GAN_MNIST_c22" "GAN_MNIST_c23" "GAN_MNIST_c24"; do
 echo $config
 
    
@@ -34,5 +34,9 @@ python train_mnist.py \
         --train=1 \
         --eval=1 \
         --device="cuda"
+        
+mv $RUNS_PATH/%J_slurm.err $RUNS_PATH/$config/%J_slurm.err 
+mv $RUNS_PATH/%J_slurm.out $RUNS_PATH/$config/%J_slurm.out 
+
 HERE
 done
