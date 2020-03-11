@@ -34,7 +34,7 @@ config = {
                 
         'train_config': {
                 'batch_size': 128,
-                'epochs': 150,
+                'epochs': 100,
                 'snapshot': 20, 
                 'console_print': 1,
                 'optim_type': 'Adam',
@@ -46,7 +46,7 @@ config = {
                 'dis_b2': 0.999,
                 
                 'filename': 'gan',
-                'random_seed': 1201
+                'random_seed': 1602
                 },
                 
         'eval_config': {
