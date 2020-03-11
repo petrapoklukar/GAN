@@ -8,7 +8,7 @@ AT="@"
 #SBATCH_OR_CAT=cat
 SBATCH_OR_CAT=sbatch
 
-for config in "GAN_MNIST_c22" "GAN_MNIST_c23" "GAN_MNIST_c24"; do
+for config in "GAN_MNIST_c23"; do
 echo $config
 
    

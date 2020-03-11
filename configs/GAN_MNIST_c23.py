@@ -14,7 +14,7 @@ config = {
 
         'generator_config': {
             'class_name': 'ConvolutionalGenerator',
-            'latent_dim': 100,
+            'latent_dim': 50,
             'channel_dims': [256, 128, 64, 1]
             },
         
