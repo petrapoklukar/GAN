@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SOURCE_PATH="${HOME}/Workspace/InfoGAN"
+SOURCE_PATH="${HOME}/Workspace/GAN"
 RUNS_PATH="${SOURCE_PATH}/slurm_logs"
 AT="@"
 
