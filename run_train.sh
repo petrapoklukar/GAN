@@ -10,7 +10,7 @@ SBATCH_OR_CAT=sbatch
 for config in "GAN_MNIST"; do
 echo $config
 
-RUNS_PATH="${SOURCE_PATH}/models/{$config}"
+RUNS_PATH="${SOURCE_PATH}/models/$config"
    
 "${SBATCH_OR_CAT}" << HERE
 #!/usr/bin/env bash
