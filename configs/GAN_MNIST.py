@@ -34,11 +34,11 @@ config = {
                 
         'train_config': {
                 'batch_size': 128,
-                'epochs': 10,
-                'snapshot': 2, 
+                'epochs': 150,
+                'snapshot': 20, 
                 'console_print': 1,
                 'optim_type': 'Adam',
-                'gen_lr_schedule': [(0, 1e-3)],
+                'gen_lr_schedule': [(0, 2e-4)],
                 'gen_b1': 0.5,
                 'gen_b2': 0.999,
                 'dis_lr_schedule': [(0, 2e-4)],
