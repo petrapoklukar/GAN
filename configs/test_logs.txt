@@ -6,12 +6,38 @@ GAN_MNIST_c22 = {
 
 GAN_MNIST_c23 = {
 	ConvolutionalDiscriminator_D2
-	x_dim 50
+	z_dim 50
 	batch_size 128
 }
 
 GAN_MNIST_c24 = {
 	ConvolutionalDiscriminator_D2
-	x_dim 100
-	batch_size 64
+	z_dim 100
+	batch_size 64 # Smaller bs seems to make things worse
+}
+
+GAN_MNIST_c25 = {
+	ConvolutionalDiscriminator_D2
+	z_dim 32
+	batch_size 128
+}
+
+GAN_MNIST_c26 = {
+	ConvolutionalDiscriminator_D2
+	z_dim 50
+	batch_size 256
+}
+
+GAN_MNIST_c27 = {
+	ConvolutionalDiscriminator_D2
+	z_dim 50
+	batch_size 128
+	g_lr 1e-3
+}
+
+GAN_MNIST_c28 = {
+	ConvolutionalDiscriminator_D2 but smaller channels
+	z_dim 50
+	batch_size 128
+	g_lr 1e-3
 }
