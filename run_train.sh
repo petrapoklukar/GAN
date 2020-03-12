@@ -4,17 +4,17 @@ SOURCE_PATH="${HOME}/Workspace/GAN"
 AT="@"
 
 # Test the job before actually submitting 
-#SBATCH_OR_CAT=cat
+# SBATCH_OR_CAT=cat
 SBATCH_OR_CAT=sbatch
 
 for config in "GAN_MNIST_c25" "GAN_MNIST_c26" "GAN_MNIST_c27" "GAN_MNIST_c28"; do
 
 RUNS_PATH="${SOURCE_PATH}/models/${config}"
 echo $RUNS_PATH
+mkdir -p $RUNS_PATH
 
 "${SBATCH_OR_CAT}" << HERE
 #!/usr/bin/env bash
-mkdir -p $RUNS_PATH
 #SBATCH --output="${RUNS_PATH}/%J_slurm.out"
 #SBATCH --error="${RUNS_PATH}/%J_slurm.err"
 #SBATCH --mail-type=BEGIN,END,FAIL
