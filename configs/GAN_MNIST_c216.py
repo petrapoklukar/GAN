@@ -10,14 +10,14 @@ config = {
         'discriminator_config': {
             'class_name': 'ConvolutionalDiscriminator_D2',
             'channel_dims': [1, 64, 128, 1],
-            'dropout': 0.5
+            'dropout': 0.3
             },
 
         'generator_config': {
             'class_name': 'ConvolutionalGenerator',
             'latent_dim': 100,
             'channel_dims': [256, 128, 64, 1],
-            'dropout': 0.5
+            'dropout': 0.3
             },
         
         'data_config': {
@@ -35,7 +35,7 @@ config = {
                 'gen_lr_schedule': [(0, 2e-4)],
                 'gen_b1': 0.5,
                 'gen_b2': 0.999,
-                'dis_lr_schedule': [(0, 1e-5)],
+                'dis_lr_schedule': [(0, 2e-4), (15, 1e-4), (30, 1e-5)],
                 'dis_b1': 0.5,
                 'dis_b2': 0.999,
                 'input_noise': True,

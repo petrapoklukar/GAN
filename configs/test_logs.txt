@@ -99,9 +99,10 @@ GAN_MNIST_c216 = {
 	ConvolutionalDiscriminator_D2 
 	z_dim 100
 	batch_size 512
-	dropout 0.5
+	dropout 0.3
 	input_noise w variance_increase 2 
-	dr_lr [(0, 1e-5)]
+	gr_lr [(0, 2e-4), (15, 1e-4), (30, 1e-5)]
+ 	# dr_lr [(0, 1e-5)]
 }
 
 
