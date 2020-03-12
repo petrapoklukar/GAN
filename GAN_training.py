@@ -31,6 +31,7 @@ class GAN(nn.Module):
         self.snapshot = train_config['snapshot']
         self.console_print = train_config['console_print']
         self.z_dim = config['data_config']['usual_noise_dim']
+        self.input_noise = train_config['input_noise']
         
         # Fixes noise to monitor the generator's progress
         self.fixed_z_noise = self.sample_latent_noise(100) 
@@ -214,11 +215,37 @@ class GAN(nn.Module):
         plt.close()
         
         fig3, ax3 = plt.subplots()
-        ax2.plot(plt_data[:, 1], 'go-', linewidth=3, label='G loss')
-        ax2.plot()
-        ax2.set_xlim(0, self.epochs)
-        ax2.set(xlabel='# epochs', ylabel='loss', title='Generator loss')
+        ax3.plot(plt_data[:, 1], 'go-', linewidth=3, label='G loss')
+        ax3.plot()
+        ax3.set_xlim(0, self.epochs)
+        ax3.set(xlabel='# epochs', ylabel='loss', title='Generator loss')
         plt.savefig(self.save_path + '_GLoss')
+        plt.close()
+        
+    def plot_gradients(self):
+        """Plots epochs vs average discriminator and generator gradients."""
+        plt_ddata = np.stack(self.dgrad_norms)
+        n_subplots = len(plt_ddata[0])
+        for i in range(n_subplots):
+            plt.plot(plt_ddata[:, i], label=str(i))
+            plt.ylabel('gradient_norm')
+            plt.xlabel('# epochs')
+            plt.legend()
+        plt.title('D Gradient norms - average per epoch')
+        plt.savefig(self.save_path + '_Dgradients')
+        plt.clf()
+        plt.close()
+            
+        plt_gdata = np.stack(self.ggrad_norms)
+        n_subplots = len(plt_gdata[0])
+        for i in range(n_subplots):
+            plt.plot(plt_gdata[:, i], label=str(i))
+            plt.ylabel('gradient_norm')
+            plt.xlabel('# epochs')
+            plt.legend()
+        plt.title('G Gradient norms - average per epoch')
+        plt.savefig(self.save_path + '_Ggradients')
+        plt.clf()
         plt.close()
     
     def sq_else_perm(self, img):
@@ -254,6 +281,16 @@ class GAN(nn.Module):
                               device=self.device).normal_() # b, z_dim, 1, 1
         return z_noise
     
+    def dinput_noise(self, tensor):
+        """Adds small Gaussian noise to the tensor."""
+        if self.input_noise:                        
+            dinput_std = max(0.75*(10. - self.current_epoch) / (10), 0.05)
+            dinput_noise = torch.empty(tensor.size(), device=self.device).normal_(mean=0, std=dinput_std)
+        else:
+            dinput_noise = torch.zeros(tensor.size(), device=self.device)
+            
+        return tensor + dinput_noise
+    
     def train(self, train_dataloader, chpnt_path=''):
         """Trains an InfoGAN."""
         
@@ -285,6 +322,8 @@ class GAN(nn.Module):
                 self.dis_lr_update_epoch, self.new_dis_lr = self.start_epoch - 1, self.dis_lr
             self.init_optimisers()
             self.epoch_losses = []
+            self.dgrad_norms = []
+            self.ggrad_norms = []
             print((' *- Generator' + 
                    '    *- Learning rate: {0}\n' + 
                    '    *- Next lr update at {1} to the value {2}\n' + 
@@ -317,7 +356,7 @@ class GAN(nn.Module):
                 real_x = x.to(self.device)        
                 real_labels = torch.ones(batch_size, device=self.device)
                 fake_labels = torch.zeros(batch_size, device=self.device)
-#                dinput_noise = torch.empty(real_x.size()).normal_(mean=0, std=0.1)
+                
                 
                 # ------------------------------- #
                 # --- Train the Discriminator --- #
@@ -325,6 +364,7 @@ class GAN(nn.Module):
                 self.optimiser_D.zero_grad()
         
                 # Loss for real images
+                real_x = self.dinput_noise(real_x)
                 real_pred = self.discriminator(real_x)                
                 assert torch.sum(torch.isnan(real_pred)) == 0, real_pred
                 assert(real_pred >= 0.).all(), real_pred
@@ -336,7 +376,8 @@ class GAN(nn.Module):
                 z_noise = self.sample_latent_noise(batch_size)
                 fake_x = self.generator(z_noise)
                 assert torch.sum(torch.isnan(fake_x)) == 0, fake_x
-                fake_pred = self.discriminator(fake_x.detach())
+                fake_x_input = self.dinput_noise(fake_x.detach())
+                fake_pred = self.discriminator(fake_x_input)
                 assert(fake_pred >= 0.).all(), fake_pred
                 assert(fake_pred <= 1.).all(), fake_pred
                 d_fake_loss = self.gan_loss(fake_pred, fake_labels)
@@ -349,18 +390,23 @@ class GAN(nn.Module):
 #                        self.discriminator.parameters(), 2)
                 self.optimiser_D.step()
 #                print('Discriminator gradients:')
-#                b_d_norms = self.get_gradients(self.discriminator)
-#                epochs_d_norms.append(b_d_norms)
+                b_d_norms = self.get_gradients(self.discriminator)
+                epochs_d_norms.append(b_d_norms)
 
                 # --------------------------- #
                 # --- Train the Generator --- #
                 # --------------------------- #
                 self.optimiser_G.zero_grad()
                 
-                fake_pred = self.discriminator(fake_x)
+                fake_x_input = self.dinput_noise(fake_x)
+                fake_pred = self.discriminator(fake_x_input)
                 g_loss = self.gan_loss(fake_pred, real_labels)
                 g_loss.backward()
                 self.optimiser_G.step()
+#                print('Generator gradients:')
+                b_g_norms = self.get_gradients(self.generator)
+                epochs_g_norms.append(b_g_norms)
+                
                 D_G_z2 = fake_pred.mean().item()
 
                 epoch_loss += self.format_loss([d_loss, g_loss])
@@ -369,18 +415,22 @@ class GAN(nn.Module):
             # --- Log the training --- #
             # ------------------------ #      
             epoch_loss /= len(train_dataloader)
-#            print("Epoch D Norm mean: ", np.mean(epochs_d_norms, axis=0))
-#            print("Epoch G Norm mean: ", np.mean(epochs_g_norms, axis=0))
             print(
                 "[Epoch %d/%d]\n\t[D loss: %f] [G loss: %f]"
                 % (self.current_epoch, self.epochs, epoch_loss[0], epoch_loss[1]))
             print(
                 "\t[D_x %f] [D_G_z1: %f] [D_G_z2: %f]"
                 % (D_x, D_G_z1, D_G_z2))
+            print("\tD Norm mean: ", np.mean(epochs_d_norms, axis=0))
+            print("\tG Norm mean: ", np.mean(epochs_g_norms, axis=0))
+            
                     
             # TODO: add logger here
             self.epoch_losses.append(epoch_loss)
-            self.plot_model_loss()       
+            self.dgrad_norms.append(np.mean(epochs_d_norms, axis=0))
+            self.ggrad_norms.append(np.mean(epochs_g_norms, axis=0))
+            self.plot_model_loss() 
+            self.plot_gradients()
             self.save_checkpoint(epoch_loss)
             
             if (self.current_epoch + 1) % self.snapshot == 0:

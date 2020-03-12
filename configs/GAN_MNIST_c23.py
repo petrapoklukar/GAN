@@ -9,13 +9,15 @@ Created on Wed Mar 11 20:44:07 2020
 config = {
         'discriminator_config': {
             'class_name': 'ConvolutionalDiscriminator_D2',
-            'channel_dims': [1, 64, 128, 1]
+            'channel_dims': [1, 64, 128, 1],
+            'dropout': 0.
             },
 
         'generator_config': {
             'class_name': 'ConvolutionalGenerator',
             'latent_dim': 50,
-            'channel_dims': [256, 128, 64, 1]
+            'channel_dims': [256, 128, 64, 1],
+            'dropout': 0.
             },
         
         'data_config': {
@@ -36,6 +38,7 @@ config = {
                 'dis_lr_schedule': [(0, 2e-4)],
                 'dis_b1': 0.5,
                 'dis_b2': 0.999,
+                'input_noise': False,
                 
                 'filename': 'gan',
                 'random_seed': 1602

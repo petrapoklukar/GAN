@@ -69,6 +69,32 @@ GAN_MNIST_c212 = {
 	dropout 0.
 }
 
+GAN_MNIST_c213 = {
+	ConvolutionalDiscriminator_D2 
+	z_dim 100
+	batch_size 512
+	dropout 0.3
+	input_noise
+}
+
+GAN_MNIST_c214 = {
+	ConvolutionalDiscriminator_D2 
+	z_dim 100
+	batch_size 512
+	dropout 0.2
+	input_noise
+	gr_lr [(0, 2e-4), (15, 1e-4), (30, 1e-5)]
+}
+
+GAN_MNIST_c215 = {
+	ConvolutionalDiscriminator_D2 
+	z_dim 100
+	batch_size 512
+	dropout 0.3
+	input_noise
+	Adam betas1 0.8
+	
+}
 
 GAN_MNIST_c101 = {
 	ConvolutionalDiscriminator but smaller channels
@@ -86,4 +112,13 @@ GAN_MNIST_c103 = {
 	ConvolutionalDiscriminator
 	z_dim 100
 	batch_size 256
+}
+
+GAN_MNIST_c104 = {
+	ConvolutionalDiscriminator but smaller channels
+	z_dim 100
+	batch_size 512
+	gr_lr [(0, 2e-4), (15, 1e-4), (30, 1e-5)]
+	dropout 0.3
+	
 }

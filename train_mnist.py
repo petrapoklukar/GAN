@@ -56,7 +56,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     # Laptop TESTING
-#    args.config_name = 'GAN_MNIST_c24'
+#    args.config_name = 'GAN_MNIST_c214'
 #    args.train = 1
 #    args.chpnt_path = ''#'models/GAN_MNIST/gan_checkpoint9.pth'
 #    args.device = None
