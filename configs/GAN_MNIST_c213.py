@@ -39,6 +39,7 @@ config = {
                 'dis_b1': 0.5,
                 'dis_b2': 0.999,
                 'input_noise': True,
+                'input_variance_increase': 1,
                 
                 'filename': 'gan',
                 'random_seed': 1602

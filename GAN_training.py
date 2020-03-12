@@ -32,6 +32,7 @@ class GAN(nn.Module):
         self.console_print = train_config['console_print']
         self.z_dim = config['data_config']['usual_noise_dim']
         self.input_noise = train_config['input_noise']
+        self.input_variance_increase = train_config['input_variance_increase']
         
         # Fixes noise to monitor the generator's progress
         self.fixed_z_noise = self.sample_latent_noise(100) 
@@ -284,7 +285,7 @@ class GAN(nn.Module):
     def dinput_noise(self, tensor):
         """Adds small Gaussian noise to the tensor."""
         if self.input_noise:                        
-            dinput_std = max(0.75*(10. - self.current_epoch) / (10), 0.05)
+            dinput_std = max(0.75*(10. - self.current_epoch//self.input_variance_increase) / (10), 0.05)
             dinput_noise = torch.empty(tensor.size(), device=self.device).normal_(mean=0, std=dinput_std)
         else:
             dinput_noise = torch.zeros(tensor.size(), device=self.device)

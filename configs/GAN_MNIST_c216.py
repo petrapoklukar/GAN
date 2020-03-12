@@ -1,24 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Mar 11 20:44:46 2020
+Created on Thu Mar 12 17:32:59 2020
 
 @author: petrapoklukar
 """
-
 
 config = {
         'discriminator_config': {
             'class_name': 'ConvolutionalDiscriminator_D2',
             'channel_dims': [1, 64, 128, 1],
-            'dropout': 0.
+            'dropout': 0.5
             },
 
         'generator_config': {
             'class_name': 'ConvolutionalGenerator',
             'latent_dim': 100,
             'channel_dims': [256, 128, 64, 1],
-            'dropout': 0.
+            'dropout': 0.5
             },
         
         'data_config': {
@@ -28,7 +27,7 @@ config = {
                 },
                 
         'train_config': {
-                'batch_size': 64,
+                'batch_size': 512,
                 'epochs': 100,
                 'snapshot': 20, 
                 'console_print': 1,
@@ -36,11 +35,11 @@ config = {
                 'gen_lr_schedule': [(0, 2e-4)],
                 'gen_b1': 0.5,
                 'gen_b2': 0.999,
-                'dis_lr_schedule': [(0, 2e-4)],
+                'dis_lr_schedule': [(0, 1e-5)],
                 'dis_b1': 0.5,
                 'dis_b2': 0.999,
-                'input_noise': False,
-                'input_variance_increase': 0,
+                'input_noise': True,
+                'input_variance_increase': 2,
                 
                 'filename': 'gan',
                 'random_seed': 1602
