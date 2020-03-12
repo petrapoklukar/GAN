@@ -33,6 +33,7 @@ class ConvolutionalGenerator(nn.Module):
         super(ConvolutionalGenerator, self).__init__()
         self.latent_dim = config['latent_dim']
         self.channel_dims = config['channel_dims'] 
+        self.dropout = config['dropout'] 
         self.ngpu = 1
 
         self.conv = nn.Sequential(
@@ -40,16 +41,19 @@ class ConvolutionalGenerator(nn.Module):
             TempPrintShape('ConvTrans1'),
             nn.BatchNorm2d(self.channel_dims[0]),
             nn.ReLU(True),
-
+            nn.Dropout(p=self.dropout),
+            
             nn.ConvTranspose2d(self.channel_dims[0], self.channel_dims[1], 4, 2, 1, bias=False),
             TempPrintShape('ConvTrans2'),
             nn.BatchNorm2d(self.channel_dims[1]),
             nn.ReLU(True),
+            nn.Dropout(p=self.dropout),
 
             nn.ConvTranspose2d(self.channel_dims[1], self.channel_dims[2], 4, 2, 1, bias=False),
             TempPrintShape('ConvTrans3'),
             nn.BatchNorm2d(self.channel_dims[2]),
             nn.ReLU(True),
+            nn.Dropout(p=self.dropout),
 
             nn.ConvTranspose2d(self.channel_dims[2], self.channel_dims[3], 4, 2, 1, bias=False),
             TempPrintShape('ConvTrans4'),
@@ -63,20 +67,24 @@ class ConvolutionalDiscriminator(nn.Module):
     def __init__(self, config):
         super(ConvolutionalDiscriminator, self).__init__()
         self.channel_dims = config['channel_dims'] 
+        self.dropout = config['dropout'] 
         self.conv = nn.Sequential(
             nn.Conv2d(self.channel_dims[0], self.channel_dims[1], 4, 2, 1, bias=False),
             TempPrintShape('Conv1'),
             nn.LeakyReLU(0.2, inplace=True),
+            nn.Dropout(p=self.dropout),
             
             nn.Conv2d(self.channel_dims[1], self.channel_dims[2], 4, 2, 1, bias=False),
             TempPrintShape('Conv2'),
             nn.BatchNorm2d(self.channel_dims[2]),
             nn.LeakyReLU(0.2, inplace=True),
+            nn.Dropout(p=self.dropout),
             
             nn.Conv2d(self.channel_dims[2], self.channel_dims[3], 4, 2, 1, bias=False),
             TempPrintShape('Conv3'),
             nn.BatchNorm2d(self.channel_dims[3]),
             nn.LeakyReLU(0.2, inplace=True),
+            nn.Dropout(p=self.dropout),
 
             nn.Conv2d(self.channel_dims[3], self.channel_dims[4], 4, 1, 0, bias=False),
             TempPrintShape('Conv4'),
@@ -90,15 +98,18 @@ class ConvolutionalDiscriminator_D2(nn.Module):
     def __init__(self, config):
         super(ConvolutionalDiscriminator_D2, self).__init__()
         self.channel_dims = config['channel_dims'] 
+        self.dropout = config['dropout'] 
         self.conv = nn.Sequential(
             nn.Conv2d(self.channel_dims[0], self.channel_dims[1], 4, 3, 1, bias=False),
             TempPrintShape('Conv1'),
             nn.LeakyReLU(0.2, inplace=True),
+            nn.Dropout(p=self.dropout),
             
             nn.Conv2d(self.channel_dims[1], self.channel_dims[2], 4, 3, 1, bias=False),
             TempPrintShape('Conv2'),
             nn.BatchNorm2d(self.channel_dims[2]),
             nn.LeakyReLU(0.2, inplace=True),
+            nn.Dropout(p=self.dropout),
 
             nn.Conv2d(self.channel_dims[2], self.channel_dims[3], 4, 3, 0, bias=False),
             TempPrintShape('Conv3'),

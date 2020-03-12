@@ -54,6 +54,22 @@ GAN_MNIST_c210 = {
 	batch_size 256
 }
 
+GAN_MNIST_c211 = {
+	ConvolutionalDiscriminator_D2 
+	z_dim 100
+	batch_size 512
+	dropout 0.3
+}
+
+GAN_MNIST_c212 = {
+	ConvolutionalDiscriminator_D2 
+	z_dim 100
+	batch_size 512
+	g_lr [(0, 1e-3), (5, 5e-3), (10, 2e-4)]
+	dropout 0.
+}
+
+
 GAN_MNIST_c101 = {
 	ConvolutionalDiscriminator but smaller channels
 	z_dim 100
