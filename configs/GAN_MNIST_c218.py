@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Mar 12 14:56:20 2020
+Created on Fri Mar 13 10:33:30 2020
 
 @author: petrapoklukar
 """
-
 
 config = {
         'discriminator_config': {
@@ -39,8 +38,8 @@ config = {
                 'dis_lr_schedule': [(0, 2e-4)],
                 'dis_b1': 0.5,
                 'dis_b2': 0.999,
-                'input_noise': False,
-                'input_variance_increase': 0,
+                'input_noise': True,
+                'input_variance_increase': 5,
                 'grad_clip': False
                 'dis_grad_clip': None,
                 'gen_gran_clip': None,

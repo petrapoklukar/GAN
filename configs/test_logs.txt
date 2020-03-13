@@ -114,6 +114,36 @@ GAN_MNIST_c217 = {
 	gr_lr [(0, 2e-4)]
 }
 
+GAN_MNIST_c218 = {
+	ConvolutionalDiscriminator_D2 
+	z_dim 100
+	batch_size 512
+	dropout 0.3
+	input_noise w variance_increase 5 
+	gr_lr [(0, 2e-4)]
+}
+
+GAN_MNIST_c219 = {
+	ConvolutionalDiscriminator_D2 
+	z_dim 100
+	batch_size 512
+	dropout 0.3
+	input_noise w variance_increase 5 
+	gr_lr [(0, 2e-4)]
+	dis_grad_clip 50
+	gen_grad_clip 20
+}
+
+GAN_MNIST_c220 = {
+	ConvolutionalDiscriminator_D2 
+	z_dim 100
+	batch_size 512
+	dropout 0.3
+	input_noise w variance_increase 5 
+	gr_lr [(0, 2e-4), (15, 1e-4), (30, 1e-5)]
+	dis_grad_clip 50
+	gen_grad_clip 20
+}
 
 GAN_MNIST_c101 = {
 	ConvolutionalDiscriminator but smaller channels

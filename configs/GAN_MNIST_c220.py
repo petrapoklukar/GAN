@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Mar 12 14:56:20 2020
+Created on Fri Mar 13 10:35:19 2020
 
 @author: petrapoklukar
 """
 
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Mar 13 10:34:12 2020
+
+@author: petrapoklukar
+"""
 
 config = {
         'discriminator_config': {
@@ -33,17 +40,17 @@ config = {
                 'snapshot': 20, 
                 'console_print': 1,
                 'optim_type': 'Adam',
-                'gen_lr_schedule': [(0, 2e-4)],
+                'gen_lr_schedule': [(0, 2e-4), (15, 1e-4), (30, 1e-5)],
                 'gen_b1': 0.5,
                 'gen_b2': 0.999,
                 'dis_lr_schedule': [(0, 2e-4)],
                 'dis_b1': 0.5,
                 'dis_b2': 0.999,
-                'input_noise': False,
-                'input_variance_increase': 0,
-                'grad_clip': False
-                'dis_grad_clip': None,
-                'gen_gran_clip': None,
+                'input_noise': True,
+                'input_variance_increase': 5,
+                'grad_clip': True
+                'dis_grad_clip': 50,
+                'gen_gran_clip': 20,
                 
                 'filename': 'gan',
                 'random_seed': 1602

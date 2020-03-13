@@ -33,6 +33,9 @@ class GAN(nn.Module):
         self.z_dim = config['data_config']['usual_noise_dim']
         self.input_noise = train_config['input_noise']
         self.input_variance_increase = train_config['input_variance_increase']
+        self.grad_clip = train_config['grad_clip']
+        self.dis_grad_clip = train_config['dis_grad_clip']
+        self.gen_grad_clip = train_config['gen_grad_clip']
         
         # Fixes noise to monitor the generator's progress
         self.fixed_z_noise = self.sample_latent_noise(100) 
@@ -402,8 +405,9 @@ class GAN(nn.Module):
                 # Total discriminator loss
                 d_loss = d_real_loss + d_fake_loss       
                 d_loss.backward()
-#                torch.nn.utils.clip_grad_norm_(
-#                        self.discriminator.parameters(), 10) 
+                if self.grad_clip:
+                    torch.nn.utils.clip_grad_norm_(
+                            self.discriminator.parameters(), self.dis_grad_clip) 
 #                torch.nn.utils.clip_grad_value_(
 #                        self.discriminator.parameters(), 5)
                 self.optimiser_D.step()
@@ -423,6 +427,9 @@ class GAN(nn.Module):
                 fake_pred = self.discriminator(fake_x_input)
                 g_loss = self.gan_loss(fake_pred, real_labels)
                 g_loss.backward()
+                if self.grad_clip:
+                    torch.nn.utils.clip_grad_norm_(
+                            self.generator.parameters(), self.gen_grad_clip) 
                 self.optimiser_G.step()
                 
                 # Track generator's gradients
