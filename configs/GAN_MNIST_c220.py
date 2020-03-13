@@ -50,7 +50,7 @@ config = {
                 'input_variance_increase': 5,
                 'grad_clip': True,
                 'dis_grad_clip': 50,
-                'gen_gran_clip': 20,
+                'gen_grad_clip': 20,
                 
                 'filename': 'gan',
                 'random_seed': 1602
