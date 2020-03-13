@@ -126,13 +126,15 @@ class ConvolutionalDiscriminator_D2(nn.Module):
 if __name__ == '__main__':
     d_config = {
             'class_name': 'ConvolutionalDiscriminator',
-            'channel_dims': [3, 16, 32, 64, 1]
+            'channel_dims': [3, 16, 32, 64, 1],
+            'dropout': 0.2
             }
 
     g_config = {
             'class_name': 'ConvolutionalGenerator',
             'latent_dim': 100,
-            'channel_dims': [256, 128, 64, 3]
+            'channel_dims': [256, 128, 64, 3],
+            'dropout': 0.2
             }
     
     G = ConvolutionalGenerator(g_config)
@@ -148,7 +150,8 @@ if __name__ == '__main__':
     
     d1_config = {
             'class_name': 'ConvolutionalDiscriminator_D2',
-            'channel_dims': [3, 16, 32, 1]
+            'channel_dims': [3, 16, 32, 1],
+            'dropout': 0.2
             }
     d = ConvolutionalDiscriminator_D2(d1_config)
     print(d(gen_x))

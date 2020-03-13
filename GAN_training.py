@@ -248,6 +248,20 @@ class GAN(nn.Module):
         plt.savefig(self.save_path + '_Ggradients')
         plt.clf()
         plt.close()
+        
+        plt_gdata_total = np.stack(self.ggrad_total_norm)
+        plt_ddata_total = np.stack(self.dgrad_total_norm)
+        n_subplots = len(plt_ddata_total[0])
+        for i in range(n_subplots):
+            plt.plot(plt_gdata_total[:, i], label='Total G norms')
+            plt.plot(plt_ddata_total[:, i], label='Total D norms')
+            plt.ylabel('total_gradient_norm')
+            plt.xlabel('# epochs')
+            plt.legend()
+        plt.title('Total G and D Gradient norms')
+        plt.savefig(self.save_path + '_totalGradients')
+        plt.clf()
+        plt.close()
     
     def sq_else_perm(self, img):
         """"""
@@ -325,6 +339,9 @@ class GAN(nn.Module):
             self.epoch_losses = []
             self.dgrad_norms = []
             self.ggrad_norms = []
+
+            self.dgrad_total_norm = []
+            self.ggrad_total_norm = []
             print((' *- Generator' + 
                    '    *- Learning rate: {0}\n' + 
                    '    *- Next lr update at {1} to the value {2}\n' + 
@@ -388,11 +405,15 @@ class GAN(nn.Module):
                 d_loss = d_real_loss + d_fake_loss       
                 d_loss.backward()
 #                torch.nn.utils.clip_grad_norm_(
-#                        self.discriminator.parameters(), 2)
+#                        self.discriminator.parameters(), 10) 
+#                torch.nn.utils.clip_grad_value_(
+#                        self.discriminator.parameters(), 5)
                 self.optimiser_D.step()
-#                print('Discriminator gradients:')
+                
+                # Track discriminator's gradients
                 b_d_norms = self.get_gradients(self.discriminator)
-                epochs_d_norms.append(b_d_norms)
+                b_d_norm_total = np.around(np.linalg.norm(np.array(b_d_norms)), decimals=3)
+                epochs_d_norms.append(b_d_norms.append(b_d_norm_total))
 
                 # --------------------------- #
                 # --- Train the Generator --- #
@@ -404,9 +425,11 @@ class GAN(nn.Module):
                 g_loss = self.gan_loss(fake_pred, real_labels)
                 g_loss.backward()
                 self.optimiser_G.step()
-#                print('Generator gradients:')
+                
+                # Track generator's gradients
                 b_g_norms = self.get_gradients(self.generator)
-                epochs_g_norms.append(b_g_norms)
+                b_g_norm_total = np.around(np.linalg.norm(np.array(b_g_norms)), decimals=3)
+                epochs_g_norms.append(b_g_norms.append(b_g_norm_total))
                 
                 D_G_z2 = fake_pred.mean().item()
 
@@ -430,6 +453,8 @@ class GAN(nn.Module):
             self.epoch_losses.append(epoch_loss)
             self.dgrad_norms.append(np.mean(epochs_d_norms, axis=0))
             self.ggrad_norms.append(np.mean(epochs_g_norms, axis=0))
+            self.dgrad_total_norm.append(b_d_norm_total)
+            self.ggrad_total_norm.append(b_g_norm_total)
             self.plot_model_loss() 
             self.plot_gradients()
             self.save_checkpoint(epoch_loss)
