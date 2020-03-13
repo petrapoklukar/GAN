@@ -34,7 +34,6 @@ class ConvolutionalGenerator(nn.Module):
         self.latent_dim = config['latent_dim']
         self.channel_dims = config['channel_dims'] 
         self.dropout = config['dropout'] 
-        self.ngpu = 1
 
         self.conv = nn.Sequential(
             nn.ConvTranspose2d(self.latent_dim, self.channel_dims[0], 4, 1, 0, bias=False),
@@ -119,6 +118,103 @@ class ConvolutionalDiscriminator_D2(nn.Module):
         return self.conv(x).view(-1)
 
 
+
+# ---------------------------------------- #
+# --- Linear Generator & Distriminator --- #
+# ---------------------------------------- #
+class LinearGenerator(nn.Module):
+    def __init__(self, config):
+        super(LinearGenerator, self).__init__()
+        self.latent_dim = config['latent_dim']
+        self.linear_dims = config['linear_dims'] # [256, 512, 1024]
+        self.image_size = config['image_size']
+        self.image_channels = config['image_channels']        
+        self.output_dim = self.image_size * self.image_size * self.image_channels
+        self.dropout = config['dropout'] 
+
+        self.lin = nn.Sequential(
+                nn.Linear(self.latent_dim, self.linear_dims[0]),
+                nn.ReLU(),
+                nn.Dropout(p=self.dropout),
+                
+                nn.Linear(self.linear_dims[0], self.linear_dims[1]),
+                nn.ReLU(),
+                nn.Dropout(p=self.dropout),
+                
+                nn.Linear(self.linear_dims[1], self.linear_dims[2]),
+                nn.ReLU(),
+                nn.Dropout(p=self.dropout),
+                
+                nn.Linear(self.linear_dims[2], self.output_dim),
+                nn.Tanh()
+                )
+        
+    def forward(self, x):
+        x = x.view(-1, self.latent_dim)
+        out_lin = self.lin(x)
+        out = out_lin.reshape(-1, self.image_channels, self.image_size, self.image_size)
+        return out
+    
+    
+class LinearDiscriminator(nn.Module):
+    def __init__(self, config):
+        super(LinearDiscriminator, self).__init__()
+        
+        self.latent_dim = config['latent_dim']
+        self.linear_dims = config['linear_dims'] # [256, 512, 1024]
+        self.image_size = config['image_size']
+        self.image_channels = config['image_channels']        
+        self.output_dim = self.image_size * self.image_size * self.image_channels
+        self.dropout = config['dropout'] 
+
+        self.lin = nn.Sequential(
+                nn.Linear(self.output_dim, self.linear_dims[0]),
+                nn.ReLU(),
+                nn.Dropout(p=self.dropout),
+                
+                nn.Linear(self.linear_dims[0], self.linear_dims[1]),
+                nn.ReLU(),
+                nn.Dropout(p=self.dropout),
+                
+                nn.Linear(self.linear_dims[1], self.linear_dims[2]),
+                nn.ReLU(),
+                nn.Dropout(p=self.dropout),
+                
+                nn.Linear(self.linear_dims[2], 1),
+                nn.Sigmoid()
+                )
+
+    def forward(self, x):
+        x = x.view(-1, self.output_dim)
+        return self.lin(x)
+    
+    
+class LinearDiscriminator_D2(nn.Module):
+    def __init__(self, config):
+        super(LinearDiscriminator_D2, self).__init__()
+        self.linear_dims = config['linear_dims'] # [512, 256]
+        self.image_size = config['image_size']
+        self.image_channels = config['image_channels']        
+        self.output_dim = self.image_size * self.image_size * self.image_channels
+        self.dropout = config['dropout'] 
+
+        self.lin = nn.Sequential(
+                nn.Linear(self.output_dim, self.linear_dims[0]),
+                nn.ReLU(),
+                nn.Dropout(p=self.dropout),
+                
+                nn.Linear(self.linear_dims[0], self.linear_dims[1]),
+                nn.ReLU(),
+                nn.Dropout(p=self.dropout),
+                
+                nn.Linear(self.linear_dims[1], 1),
+                nn.Sigmoid()
+                )
+
+    def forward(self, x):
+        x = x.view(-1, self.output_dim)
+        return self.lin(x)
+    
     
 # --------------------------------- #
 # --- Testing the architectures --- #
