@@ -259,7 +259,7 @@ class GAN(nn.Module):
             plt.xlabel('# epochs')
             plt.legend()
         plt.title('Total G and D Gradient norms')
-        plt.savefig(self.save_path + '_totalGradients')
+        plt.savefig(self.save_path + '_totalGaradients')
         plt.clf()
         plt.close()
     
@@ -412,8 +412,9 @@ class GAN(nn.Module):
                 
                 # Track discriminator's gradients
                 b_d_norms = self.get_gradients(self.discriminator)
+                epochs_d_norms.append(b_d_norms)
                 b_d_norm_total = np.around(np.linalg.norm(np.array(b_d_norms)), decimals=3)
-                epochs_d_norms.append(b_d_norms.append(b_d_norm_total))
+            
 
                 # --------------------------- #
                 # --- Train the Generator --- #
@@ -428,8 +429,8 @@ class GAN(nn.Module):
                 
                 # Track generator's gradients
                 b_g_norms = self.get_gradients(self.generator)
+                epochs_g_norms.append(b_g_norms)
                 b_g_norm_total = np.around(np.linalg.norm(np.array(b_g_norms)), decimals=3)
-                epochs_g_norms.append(b_g_norms.append(b_g_norm_total))
                 
                 D_G_z2 = fake_pred.mean().item()
 
