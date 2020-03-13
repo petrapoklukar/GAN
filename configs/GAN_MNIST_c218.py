@@ -28,7 +28,7 @@ config = {
                 
         'train_config': {
                 'batch_size': 512,
-                'epochs': 100,
+                'epochs': 300,
                 'snapshot': 20, 
                 'console_print': 1,
                 'optim_type': 'Adam',
@@ -40,7 +40,7 @@ config = {
                 'dis_b2': 0.999,
                 'input_noise': True,
                 'input_variance_increase': 5,
-                'grad_clip': False
+                'grad_clip': False,
                 'dis_grad_clip': None,
                 'gen_gran_clip': None,
                 

@@ -48,7 +48,7 @@ config = {
                 'dis_b2': 0.999,
                 'input_noise': False,
                 'input_variance_increase': 0,
-                'grad_clip': False
+                'grad_clip': False,
                 'dis_grad_clip': None,
                 'gen_gran_clip': None,
                 
