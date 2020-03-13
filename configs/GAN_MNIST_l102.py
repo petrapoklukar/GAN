@@ -31,7 +31,7 @@ config = {
                 },
                 
         'train_config': {
-                'batch_size': 512,
+                'batch_size': 128,
                 'epochs': 100,
                 'snapshot': 20, 
                 'console_print': 1,
