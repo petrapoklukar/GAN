@@ -467,7 +467,7 @@ class GAN(nn.Module):
             
             if (self.current_epoch + 1) % self.snapshot == 0:
                 # Save the checkpoint & logs, plot snapshot losses
-                self.save_checkpoint(epoch_loss, keep=True)
+                self.save_checkpoint(epoch_loss, keep=False)
                 self.save_logs()
 
                 # Plot snapshot losses
