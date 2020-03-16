@@ -53,7 +53,7 @@ class GAN(nn.Module):
         # Fix random seed
         torch.manual_seed(train_config['random_seed'])
         np.random.seed(train_config['random_seed'])
-        self.monitor_generator = 1
+        self.monitor_generator = 5
         self.discriminator_update_step = 3
 
     # ---------------------- #
