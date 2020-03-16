@@ -7,7 +7,7 @@ AT="@"
 # SBATCH_OR_CAT=cat
 SBATCH_OR_CAT=sbatch
 
-for config in "GAN_MNIST_l114" "GAN_MNIST_l115" "GAN_MNIST_l116" "GAN_MNIST_l117" "GAN_MNIST_l118"; do
+for config in "GAN_MNIST_l119" "GAN_MNIST_l120" "GAN_MNIST_l121" "GAN_MNIST_l122" "GAN_MNIST_l123" "GAN_MNIST_l124"; do
 
 RUNS_PATH="${SOURCE_PATH}/models/${config}"
 echo $RUNS_PATH
