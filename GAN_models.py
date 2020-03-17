@@ -160,7 +160,6 @@ class LinearDiscriminator(nn.Module):
     def __init__(self, config):
         super(LinearDiscriminator, self).__init__()
         
-        self.latent_dim = config['latent_dim']
         self.linear_dims = config['linear_dims'] # [256, 512, 1024]
         self.image_size = config['image_size']
         self.image_channels = config['image_channels']        
