@@ -57,7 +57,7 @@ config = {
                 },
                 
         'eval_config': {
-                'filepath': 'models/GAN_MNIST/gan_model.pt',
+                'filepath': 'models/{0}/gan_model.pt',
                 'load_checkpoint': False,
                 'n_test_samples': 25,
                 'n_repeats': 5
